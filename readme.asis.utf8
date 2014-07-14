@@ -1,0 +1,40 @@
+mVMCソースコードと入力データ (2013.11.08 by 森田)
+
+# ディレクトリ構造
+
+* src: ソースコード
+    * sfmt: SIMD-oriented Fast Mersenne Twister
+    * pfapack: Pfaffian計算用ライブラリ (http://www.lorentz.leidenuniv.nl/~wimmer/downloads.html)
+* job_tiny: コンパイルチェック用小規模定義ファイル
+* job_middle: 中規模定義ファイル
+* result: job_tiny, job_middleの結果例
+* makeDef: 定義ファイル作成用スクリプト
+
+# コンパイル
+
+  make kei : 京スパコン，fx10用
+  make kashiwa : 物性研スパコンシステムB用
+
+src内でmakeすることで実行ファイルvmc.outが生成されます．
+Makefileの内部でそれぞれの環境に対応したMakefile_???を呼んでいます．
+さらにその中で，外部ライブラリのpfapack, sfmtをコンパイルするために，
+各ディレクトリ内にあるMakefile_???を呼び出しています．
+新たな環境でコンパイルするには，主に，コンパイラとmklライブラリのオプションを変更して下さい．
+
+# ジョブの実行
+
+job_*内のjob.shが，サンプルスクリプトです．
+計算結果は，multiDir.defで指定したディレクトリ内にzvo_*.datという名前で出力されます．
+実行時にopt.initが無いというエラーメッセージが出力されますが，仕様通りですので無視して構いません．
+job_tinyのジョブの実行時間は，研究室の計算機 (Intel Xeon E5-2420 1コア) で約12秒です．
+job_middleのジョブの実行時間は，京 (128ノード, 8スレッド) で約4分です．
+
+実際に計算している系は，2次元正方格子上の近藤格子模型 (J/t=1.0, half-filling) で，
+パラメータ最適化を20ステップ実行しています．
+パラメータ最適化のステップ数は，zmodpara.defにあるNSROptItrStepの値で指定しています．
+計算時間はステップ数に比例しますので，計算時間を変えたい場合はこの値を調節して下さい．
+
+result内に手元で実行した結果が置いてあります．
+もっとも比較しやすいのはzvo_out_000.datで，
+1列目が各最適化ステップでのエネルギー期待値になっています．
+MPIプロセス数が同じならば，ほぼ同じ値になるはずです．

@@ -1,0 +1,31 @@
+FC = mpif90
+CC = mpicc
+
+BLAS = -L/usr/lib64/atlas -lf77blas
+LAPACK = -L/usr/lib64/atlas -llapack
+SCALAPACK = -L/usr/lib64/scalapack -lscalapack -lblacs
+LIB = $(SCALAPACK) $(LAPACK) $(BLAS)
+
+CFLAGS = -O3 -openmp 
+OPTION = -D_mpi_use
+
+OUT = vmc.out
+SRC = vmcmain.c
+PFAPACK = pfapack/libpfapack.a
+SFMT = sfmt/SFMT.o
+OBJS = vmcmain.o $(PFAPACK) $(SFMT)
+
+.PHONY : all pfapack sfmt
+all : vmc.out
+
+vmc.out : vmcmain.o pfapack sfmt
+	$(FC) -o $(OUT) $(OBJS) $(CFLAGS) $(LIB)
+
+vmcmain.o : *.c *.h
+	$(CC) -c $(SRC) $(OPTION) $(CFLAGS) $(REPORT)
+
+pfapack :
+	$(MAKE) -C pfapack -f Makefile_intel
+sfmt :
+	$(MAKE) -C sfmt -f Makefile_intel
+

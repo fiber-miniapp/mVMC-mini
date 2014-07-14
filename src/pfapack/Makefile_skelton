@@ -1,0 +1,22 @@
+OBJECTS = dlasktrd.o dlasktrf.o \
+	 dskmv.o dskpfa.o dskr2.o dskr2k.o dsktd2.o \
+	 dsktf2.o dsktrd.o dsktrf.o
+
+FORT = f90
+FFLAGS = -O3 
+
+all: $(OBJECTS)
+	$(AR) rvu libpfapack.a $(OBJECTS)
+
+clean:
+	-rm -f *.o
+	-rm -f *.mod
+	-rm -f libpfapack.a
+
+.SUFFIXES: .o .f .f90
+
+.f90.o:
+	$(FORT) $(FFLAGS) -c $< -o $@
+
+.f.o:
+	$(FORT) $(FFLAGS) -c $< -o $@

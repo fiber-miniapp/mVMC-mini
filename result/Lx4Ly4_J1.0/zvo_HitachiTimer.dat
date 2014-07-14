@@ -1,0 +1,42 @@
+All                         [0]     11.52886
+Initialization              [1]      0.00836
+  read options             [10]      0.00029
+  ReadDefFile              [11]      0.00388
+  SetMemory                [12]      0.00005
+  InitParameter            [13]      0.00010
+VMCParaOpt                  [2]     11.52050
+  VMCMakeSample             [3]      7.60700
+    makeInitialSample      [30]      0.02221
+    make candidate         [31]      0.03223
+    hopping update         [32]      0.49988
+      UpdateProjCnt        [60]      0.01301
+      CalculateNewPfM2     [61]      0.05111
+      CalculateLogIP       [62]      0.00457
+      UpdateMAll           [63]      0.41908
+    exchange update        [33]      6.03359
+      UpdateProjCnt        [65]      0.05399
+      CalculateNewPfMTwo2  [66]      1.07165
+      CalculateLogIP       [67]      0.01133
+      UpdateMAllTwo        [68]      4.86823
+    recal PfM and InvM     [34]      1.00372
+    save electron config   [35]      0.00154
+  VMCMainCal                [4]      3.88461
+    CalculateMAll          [40]      3.17512
+    LocEnergyCal           [41]      0.40497
+      CalHamiltonian0      [70]      0.00189
+      CalHamiltonian1      [71]      0.17645
+      CalHamiltonian2      [72]      0.21602
+    ReturnSlaterElmDiff    [42]      0.12613
+    calculate OO and HO    [43]      0.17389
+  StochasticOpt             [5]      0.02468
+    preprocess             [50]      0.00009
+    stcOptMain             [51]      0.02441
+      initBLACS            [55]      0.00046
+      calculate S and g    [56]      0.00356
+      DPOSV                [57]      0.02013
+      gatherParaChange     [58]      0.00021
+    postprocess            [52]      0.00017
+  UpdateSlaterElm          [20]      0.00227
+  WeightAverage            [21]      0.00089
+  outputData               [22]      0.00028
+  SyncModifiedParameter    [23]      0.00003

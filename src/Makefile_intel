@@ -1,0 +1,45 @@
+FC = mpif90
+CC = mpicc
+
+# perhaps we can link MKL here
+#	MKL_DIR  = -L/usr/local/intel/composer_xe_2013/mkl/lib/intel64 \
+#	BLAS = -lmkl_intel_thread -lmkl_core -lmkl_avx -lmkl_intel_lp64
+#	LAPACK =
+#	SCALAPACK = -lmkl_intel_lp64 -lmkl_scalapack_lp64
+#	LIB = $(MKL_DIR) $(SCALAPACK) $(LAPACK) $(BLAS)
+
+MKL = -L/usr/local/intel/composer_xe_2013/mkl/lib/intel64 \
+-Wl,--start-group \
+-lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lmkl_scalapack_lp64 \
+-lmkl_blacs_intelmpi_lp64 \
+-Wl,--end-group \
+-lpthread
+
+LIB = $(MKL) 
+
+CFLAGS = -xHost -O3 -openmp -opt-prefetch=3 -nofor-main
+#	REPORT = 
+#	REPORT = -vec-report -openmp-report
+REPORT = -vec-report 
+OPTION = -D_mpi_use
+
+OUT = vmc.out
+SRC = vmcmain.c
+PFAPACK = pfapack/libpfapack.a
+SFMT = sfmt/SFMT.o
+OBJS = vmcmain.o $(PFAPACK) $(SFMT)
+
+.PHONY : all pfapack sfmt
+all : vmc.out
+
+vmc.out : vmcmain.o pfapack sfmt
+	$(FC) -o $(OUT) $(OBJS) $(CFLAGS) $(LIB)
+
+vmcmain.o : *.c *.h
+	$(CC) -c $(SRC) $(OPTION) $(CFLAGS) $(REPORT)
+
+pfapack :
+	$(MAKE) -C pfapack -f Makefile_intel
+sfmt :
+	$(MAKE) -C sfmt -f Makefile_intel
+
