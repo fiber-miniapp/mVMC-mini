@@ -71,7 +71,7 @@ Nsub = Sx*Sy
 NQPTrans = 4*Nsub
 
 NProcess = int(sys.argv[1])
-NTotalSample = 12288
+NTotalSample = 4096
 NOuterMPI = 64
 NSplitSize = NProcess/NOuterMPI
 NVMCSample = NTotalSample/NOuterMPI
@@ -166,8 +166,8 @@ f.write(
     "NSPGaussLeg    16\n"+
     "NSPStot        0\n"+
     "NMPTrans       {0}\n".format(NQPTrans)+
-    "NSROptItrStep  20\n"+
-    "NSROptItrSmp   5\n"+
+    "NSROptItrStep  4\n"+
+    "NSROptItrSmp   2\n"+
     "NSROptFixSmp   1\n"+
     "DSROptRedCut   1e-10\n"+
     "DSROptStaDel   0.01\n"+

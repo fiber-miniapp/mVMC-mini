@@ -34,8 +34,8 @@ The following software suite is necessary for installing the package.
 
 + Prerequisite software:
   - C compiler and Fortran compiler with OpenMP support
-  - BLACS library.
-  - Scalapack library.
+  - BLAS and LAPACK library.
+  - BLACS and ScaLAPACK library.
   - MPI library.
 
 ####example - K computer
@@ -93,42 +93,60 @@ In src/ directory, there are "Makefile_*" for several platforms.
 + Predefined platform : Makefile_${platform}
  -	Makefile_intel : for Intel compiler+MPI on Intel Xeon Linux cluster
  -	Makefile_fx10 : for Fujitsu compiler+MPI on FX10 and K computer
- -	Makefile_pgi  : for PGI compiler + OpenMPI/pgi on Intel Xeon Linux
- -	Makefile_gnu  : for GNU compiler + OpenMPI/gcc on Intel Xeon Linux
+ -	Makefile_pgi  : for PGI compiler + ACML + OpenMPI/pgi on Linux
 
-If your testing platform is covered by one of these, set the value of platform,
-and you can move to the step 3, without taking step 2.  
-For example of intel, set the value as below, and you can move to step 3.
+If the installing platform is either intel or fx10, then set the value of
+platform as so.
+For example of intel, set the value as below.
 
 	$ platform=intel
+Or for K computer and/or FX10 system, set the value as below.
 
-If your testing platform is NOT covered by above, create your
-"Makefile_${platform}", by following the step 2.
+	$ platform=fx10
+
+In either case, you can move to step 3 without taking step 2.  
+
+If the installing platform has PGI compiler, then use the file "Makefile_pgi"
+and modify the values of LAPACK and SCALAPACK path.
+The combination of PGI/ACML/ScaLAPACK and their locations are system
+dependent in combination with MPI choice.
+After the values are set for LAPACK and SCALAPACK, then set platform value as:
+
+	$ platform=pgi
+
+and you can move to step 3 without taking step 2.  
+
+If the installing platform is NOT covered by either of above, create
+an appropriate "Makefile_${platform}" by taking the following step 2.
 
 
 #####step 2.
 
-Create "Makefile_${platform}" _file_.
+When installing mVMC on other platform with different compiler and MPI
+combination, create "Makefile_${platform}" _file_ accordingly.
+The value for ${platform} can be chosen anonymously, such as akb.
 
-If you are installing mVMC on a different platform, then create a file
-"Makefile_${platform}" accordingly.
-The value for ${platform} can be any, such as akb.
-It may be easier to copy Makefile_skelton and edit it.
-Edit the file and give some commonly used compiler options via CFLAGS.
-In addition to the library software included in the package, mVMC-mini
-also requires the **BLACS** library and **Scalapack** library,
-whose location is system dependent.
-The location of these BLACS and Scalapack library should be specified via
-LIB setting in the "Makefile_${platform}" file.
+Edit the file and set the compiler names and their options with
+**CC** , **FC** , **CFLAGS** and **FFLAGS** variables.
+mVMC-mini requires the preinstalled **LAPACK** library and **ScaLAPACK**
+library whose locations are system dependent.
+Link option **LIB** should point to these LAPACK and SCALAPACK.
 
-	$ cd src
+The values of all these variables should be set in "Makefile_${platform}" file.
+A skeleton file "Makefile_skeleton" is provided for convenience.
+It may be easier to copy and edit the skeleton file as shown below.
+
 	$ platform=akb
+	$ cd src
 	$ cp Makefile_intel Makefile_${platform}
-	$ vi Makefile_${platform}		# edit CFLAGS and LIB, etc.
+	$ vi Makefile_${platform}		# edit CC, CFLAGS, etc.
+
 
 #####step 3.
 
-Run make command in the src/ directory. 
+By now the makefile "Makefile_${platform}" must be ready in src/ directory. 
+
+Run make command in src/ directory. 
 After make command finishes successfully, there should be an executable file 
 named "vmc.out" in the directory.
 
@@ -196,7 +214,8 @@ For jobs with the same number of MPI processes, the computed values
 should roughly match.
 
 
-Testing at scale
+
+Running the scalability tests
 -----------------------
 
 mVMC adopts two different parallel processing approaches for its
@@ -225,15 +244,13 @@ the number of Monte Carlo sampling will be 192, and if a job is run using
 
 #### strong scaling test
 For strong scaling tests, the number of Monte Carlo samples should be kept
-the same regardless of Nmpi, which can done by changing the number of groups
+the same across the tests, which can be done by changing the number of groups
 NSplitSize according to Nmpi.
-The default job_middle parameters, however, is not suitable for
-scaling tests up to large scale.
 
-A separate Python script named "makeDef_large.py" is provided
-under makeDef/ directory, which will produce the input definition files
-and the jobscript.
-To produce the input definition files and the jobscript for Nmpi process job,
+A separate Python script named "makeDef_large.py" under makeDef/ directory
+is provided to produce the appropriate input definition files and the
+jobscript files for strong scaling tests up to 4096 MPI processes.
+To produce the necessary files for Nmpi process job,
 run the following command on a system which supports Python.
 
     ./makeDef_large.py Nmpi
@@ -241,11 +258,7 @@ run the following command on a system which supports Python.
 After this script is run, there will be a jobscript "job_mpi${Nmpi}" and
 a set of input definition files named "*.def".
 The number of groups are set as 64, so jobs with the multiple of 64 MPIs
-are good choices.  The jobs up to 4096 MPIs can be created.
-A job with 1024 MPIs takes about one hour.
-Jobs with small number of MPIs will run many hours, accordingly.
-When running strong scaling tests, it is generally recommended to
-reduce the number of steps, i.e. NSROptItrStep.
+are good choices.  A job with 64 MPIs will take about one hour on K computer.
 
 #### OpenMP threads
 The number of OpenMP threads can be set independent of the input difinition
@@ -255,7 +268,6 @@ By default, the job.sh file created by above makeDef_large.py sets the
 threads value as:
 
     export OMP_NUM_THREADS=8
-
 
 
 What mVMC-mini does - brief explanation

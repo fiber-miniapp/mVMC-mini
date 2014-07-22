@@ -7,6 +7,7 @@ SCALAPACK = -L/usr/lib64/scalapack -lscalapack -lblacs
 LIB = $(SCALAPACK) $(LAPACK) $(BLAS)
 
 CFLAGS = -O3 -openmp 
+FFLAGS = -O3 -openmp 
 OPTION = -D_mpi_use
 
 OUT = vmc.out
@@ -19,7 +20,7 @@ OBJS = vmcmain.o $(PFAPACK) $(SFMT)
 all : vmc.out
 
 vmc.out : vmcmain.o pfapack sfmt
-	$(FC) -o $(OUT) $(OBJS) $(CFLAGS) $(LIB)
+	$(FC) -o $(OUT) $(OBJS) $(FFLAGS) $(LIB)
 
 vmcmain.o : *.c *.h
 	$(CC) -c $(SRC) $(OPTION) $(CFLAGS) $(REPORT)

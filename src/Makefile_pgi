@@ -1,0 +1,40 @@
+FC = mpif90
+CC = mpicc
+
+CFLAGS = -fast -O3 -Mconcur -mp=nonuma
+FFLAGS = -fast -O3 -Mconcur -mp=nonuma -Mnomain
+REPORT = 
+OPTION = -D_mpi_use
+
+# LAPACK and ScaLAPACK must exist on the compiling platform with the chosen
+# combination of compiler and MPI
+
+#	LAPACK_DIR = /usr/local/amd/acml4/pgi64_mp/lib
+#	LAPACK =  -L${LAPACK_DIR} -lacml_mp 
+LAPACK =
+#	SCALAPACK_DIR = /usr/local/pgi/linux86-64/2014/mpi/openmpi/lib64
+#	SCALAPACK = -L${SCALAPACK_BASE_DIR} -lscalapack
+SCALAPACK = 
+
+LIB = $(LAPACK) $(SCALAPACK)
+
+OUT = vmc.out
+SRC = vmcmain.c
+PFAPACK = pfapack/libpfapack.a
+SFMT = sfmt/SFMT.o
+OBJS = vmcmain.o $(PFAPACK) $(SFMT)
+
+.PHONY : all pfapack sfmt
+all : vmc.out
+
+vmc.out : vmcmain.o pfapack sfmt
+	$(FC) -o $(OUT) $(OBJS) $(FFLAGS) $(LIB)
+
+vmcmain.o : *.c *.h
+	$(CC) -c $(SRC) $(OPTION) $(CFLAGS) $(REPORT)
+
+pfapack :
+	$(MAKE) -C pfapack -f Makefile_pgi
+sfmt :
+	$(MAKE) -C sfmt -f Makefile_pgi
+
