@@ -27,9 +27,10 @@ src/pfapack/ and src/sfmt/ subdirectories which are used as part of mVMC.
 Installation
 ------------
 
-The mVMC-mini package "mVMC-mini.v1.tar.gz" can be downloaded from the 
+The mVMC-mini package "mVMC-mini-1.0.tar.gz" can be downloaded from the 
 repository.  
-https://github.com/fiber-miniapp/mVMC-mini  
+http://fiber-miniapp.github.io/
+
 The following software suite is necessary for installing the package.
 
 + Prerequisite software:
@@ -42,7 +43,7 @@ The following software suite is necessary for installing the package.
 As a quick start, the installation example on K computer is shown first.
 The installation should be quite easy as below.
 
-    $ tar -zxf mVMC-mini.v1.tar.gz
+    $ tar -zxf mVMC-mini-1.0.tar.gz
     $ cd src
     $ make Kei
 
@@ -55,7 +56,7 @@ as "vmc.out" in the src/ directory as below.
 ####example - Intel compiler and libraries
 The installation example on Intel software environment is shown next.
 
-    $ tar -zxf mVMC-mini.v1.tar.gz
+    $ tar -zxf mVMC-mini-1.0.tar.gz
     $ cd src
     $ make intel
 
@@ -67,12 +68,12 @@ simple as well.  A typical installation step is explained below.
 
 #####step 1.
 
-Obtain the mVMC-mini package "mVMC-mini.v1.tar.gz" from the repository.
-https://github.com/fiber-miniapp/mVMC-mini  
+Obtain the mVMC-mini package "mVMC-mini-1.0.tar.gz" from the repository.
+http://fiber-miniapp.github.io/
 Extract its contents using tar command.
 This readme.txt (readme.md) file is included in the package.
 
-	$ tar -zxf mVMC-mini.v1.tar.gz
+	$ tar -zxf mVMC-mini-1.0.tar.gz
 	$ ls
 	LICENSE    job_middle  makeDef           result
 	README.md  job_tiny    readme.asis.utf8  src
