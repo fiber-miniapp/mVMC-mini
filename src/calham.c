@@ -22,7 +22,7 @@ double CalculateHamiltonian(const double ip, int *eleIdx, const int *eleCfg,
   /* GreenFunc1: NQPFull, GreenFunc2: NQPFull+2*Nsize */
 
 #pragma omp parallel default(shared)\
-  private(myEleIdx,myEleNum,myProjCntNew,myBuffer,myEnergy)\
+  private(myEleIdx,myEleNum,myProjCntNew,myBuffer,myEnergy,idx)\
   reduction(+:e)
   {
     myEleIdx = GetWorkSpaceThreadInt(Nsize);
